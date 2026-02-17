@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>NOVA PAY • Transfer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        /* card utama — smooth glassmorphism hitam-ungu */
+        .app-container {
+            max-width: 420px;
+            width: 100%;
+            background: rgba(18, 18, 28, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(138, 43, 226, 0.15);
+            border-radius: 40px;
+            padding: 24px 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(160, 80, 255, 0.1) inset, 0 0 30px rgba(120, 40, 200, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        /* header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding: 0 4px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(145deg, #9f4bff, #6c2bd2);
+            width: 40px;
+            height: 40px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 18px #4a1e9e40;
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(130deg, #ffffff 20%, #d4b0ff 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-btn {
+            background: rgba(30, 25, 45, 0.8);
+            border: 1px solid #7a3ee5;
+            border-radius: 30px;
+            padding: 8px 12px 8px 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 10px #9f4bff30;
+        }
+
+        .profile-pic {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(145deg, #b87bff, #6f32db);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .profile-name {
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            margin-right: 4px;
+        }
+
+        /* saldo card */
+        .balance-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 32px;
+            padding: 22px 20px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(170, 100, 255, 0.2);
+            border-bottom: 2px solid #9147ff30;
+            box-shadow: 0 15px 25px -15px #000000cc, inset 0 1px 1px #ffffff0d;
+            backdrop-filter: blur(10px);
+        }
+
+        .balance-label {
+            color: #b4a6d9;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 42px;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .balance-currency {
+            font-size: 22px;
+            color: #b380ff;
+            font-weight: 600;
+        }
+
+        .balance-note {
+            color: #8a7baa;
+            font-size: 13px;
+            margin-top: 12px;
+            border-top: 1px dashed #4a2d7a40;
+            padding-top: 12px;
+        }
+
+        /* fitur quick actions */
+        .quick-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .action-item {
+            flex: 1;
+            background: rgba(24, 18, 34, 0.7);
+            border-radius: 24px;
+            padding: 12px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #3b2758;
+            transition: all 0.15s;
+            backdrop-filter: blur(8px);
+        }
+
+        .action-item.active {
+            background: #6b21ff20;
+            border-color: #b57cff;
+            box-shadow: 0 0 15px #9f4bff;
+        }
+
+        .action-icon {
+            background: #2a1b3a;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dbbfff;
+        }
+
+        .action-item.active .action-icon {
+            background: #8a4eff;
+            color: white;
+            box-shadow: 0 0 15px #c598ff;
+        }
+
+        .action-label {
+            color: #cbb5f0;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        /* form transfer (card) */
+        .transfer-section {
+            background: rgba(12, 10, 20, 0.7);
+            border-radius: 36px;
+            padding: 24px 18px;
+            border: 1px solid #5a2ca050;
+            margin-bottom: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title span {
+            background: #9147ff;
+            width: 8px;
+            height: 8px;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 0 12px #b47aff;
+        }
+
+        .search-user {
+            background: #171322;
+            border-radius: 40px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #6d3fbb;
+            margin-bottom: 24px;
+        }
+
+        .search-user svg {
+            fill: #b591ff;
+            width: 20px;
+        }
+
+        .search-user input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: #f0e6ff;
+            font-size: 16px;
+            padding: 12px 0;
+        }
+
+        .search-user input::placeholder {
+            color: #5d4d7a;
+            font-weight: 400;
+        }
+
+        /* daftar kontak / user tujuan */
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 28px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            background: #161129;
+            border-radius: 60px;
+            border: 1px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .contact-item.selected {
+            border-color: #b27aff;
+            background: #281e3d;
+            box-shadow: 0 0 0 2px #7b3feb30;
+        }
+
+        .contact-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, #5d36a0, #351b5a);
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 6px 12px #1a0d2e;
+        }
+
+        .contact-detail {
+            flex: 1;
+        }
+
+        .contact-name {
+            color: white;
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .contact-phone {
+            color: #9470c4;
+            font-size: 13px;
+        }
+
+        /* input nominal */
+        .nominal-box {
+            background: #0e0b16;
+            border-radius: 30px;
+            padding: 12px 20px;
+            border: 1px solid #6534af;
+            margin: 24px 0 18px;
+        }
+
+        .nominal-label {
+            color: #ac92d4;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .nominal-input-area {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nominal-currency {
+            color: #b07eff;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .nominal-input-area input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 32px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .nominal-input-area input::placeholder {
+            color: #332c44;
+        }
+
+        .note-area {
+            background: #161129;
+            border-radius: 20px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #513587;
+            margin: 10px 0 16px;
+        }
+
+        .note-area svg {
+            fill: #b185ff;
+        }
+
+        .note-area input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #d9c7ff;
+            font-size: 15px;
+            width: 100%;
+            padding: 14px 0;
+        }
+
+        .note-area input::placeholder {
+            color: #5b4b79;
+        }
+
+        /* tombol kirim */
+        .send-btn {
+            background: linear-gradient(115deg, #8a42f5, #6232cb);
+            width: 100%;
+            border: none;
+            border-radius: 60px;
+            padding: 22px 0;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+            box-shadow: 0 18px 30px -8px #4c1f9e, 0 0 0 1px #c394ff inset;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .send-btn:active {
+            transform: scale(0.97);
+            background: #722ed1;
+            box-shadow: 0 8px 16px #2f0f6a;
+        }
+
+        .send-btn svg {
+            fill: white;
+            width: 24px;
+        }
+
+        /* bottom nav */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 0 12px;
+        }
+
+        .nav-icon {
+            background: transparent;
+            padding: 12px;
+            border-radius: 60px;
+            color: #67548b;
+            transition: all 0.1s;
+        }
+
+        .nav-icon.active {
+            color: #cdadff;
+            background: #311f4a;
+            box-shadow: 0 0 16px #9147ff50;
+        }
+
+        .nav-icon svg {
+            fill: currentColor;
+            width: 24px;
+            height: 24px;
+        }
+
+        /* responsive kecil (hp) mantap */
+        @media (max-width: 380px) {
+            .balance-amount {
+                font-size: 34px;
+            }
+            .action-icon {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        /* sentuhan ungu gelap smooth */
+        ::selection {
+            background: #a16eff;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6-2.28 0-2.56 3.5-4.72 6-4.72s6 2.16 6 4.72c-1.57 1.46-3.97 2.28-6 2.28z"/>
+                    </svg>
+                </div>
+                <span class="logo-text">NovaPay</span>
+            </div>
+            <div class="profile-btn">
+                <div class="profile-pic">AK</div>
+                <span class="profile-name">Alex</span>
+            </div>
+        </div>
+
+        <!-- kartu saldo -->
+        <div class="balance-card">
+            <div class="balance-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#b380ff">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                Total saldo
+            </div>
+            <div class="balance-amount">
+                <span class="balance-currency">Rp</span> 2.450.000
+            </div>
+            <div class="balance-note">
+                <span>💳 •••• 3425</span>  •  limit harian Rp5jt
+            </div>
+        </div>
+
+        <!-- quick action (mirip dana) -->
+        <div class="quick-actions">
+            <div class="action-item active">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                    </svg>
+                </div>
+                <span class="action-label">Transfer</span>
+            </div>
+            <div class="action-item">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                    </svg>
+                </div>
+                <span class="action-label">Isi</span>
+            </div>
+            <div class="action-item">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 14v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2zm-9 3l-6-6 6-6 1.41 1.41L7.83 10H20v2H7.83l3.58 3.59L10 17z"/>
+                    </svg>
+                </div>
+                <span class="action-label">Tarik</span>
+            </div>
+            <div class="action-item">
+                <div class="action-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-1 .05 1.16.84 2 1.87 2 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                </div>
+                <span class="action-label">Kontak</span>
+            </div>
+        </div>
+
+        <!-- transfer section -->
+        <div class="transfer-section">
+            <div class="section-title">
+                <span></span> Transfer ke pengguna
+            </div>
+
+            <!-- search -->
+            <div class="search-user">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" placeholder="Cari nama atau nomor telepon" value="Rina">
+            </div>
+
+            <!-- pilih kontak -->
+            <div class="contact-list">
+                <div class="contact-item selected">
+                    <div class="contact-avatar">RN</div>
+                    <div class="contact-detail">
+                        <div class="contact-name">Rina Andriani</div>
+                        <div class="contact-phone">+62 812-3456-7890</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar">DW</div>
+                    <div class="contact-detail">
+                        <div class="contact-name">Dwiki Prasetyo</div>
+                        <div class="contact-phone">+62 857-8901-2345</div>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar">MF</div>
+                    <div class="contact-detail">
+                        <div class="contact-name">Maya Fadila</div>
+                        <div class="contact-phone">+62 821-3456-7890</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- nominal input -->
+            <div class="nominal-box">
+                <div class="nominal-label">Nominal transfer</div>
+                <div class="nominal-input-area">
+                    <span class="nominal-currency">Rp</span>
+                    <input type="text" placeholder="0" value="150.000">
+                </div>
+            </div>
+
+            <!-- catatan (opsional) -->
+            <div class="note-area">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+                <input type="text" placeholder="Tambahkan catatan (opsional)">
+            </div>
+
+            <!-- tombol kirim dana -->
+            <button class="send-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+                Kirim Rp 150.000
+            </button>
+        </div>
+
+        <!-- bottom navigation (ala dana)-->
+        <div class="bottom-nav">
+            <div class="nav-icon active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 7v12l10 5 10-5V7l-10-5zm0 2.2l6 3v8.4l-6 3-6-3V7.2l6-3zM8 9.5v4.2l4 2 4-2V9.5l-4-2-4 2z"/>
+                </svg>
+            </div>
+            <div class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 4c2.76 0 5 2.24 5 5s-2.24 5-5 5-5-2.24-5-5 2.24-5 5-5z"/>
+                </svg>
+            </div>
+            <div class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6-2.28 0-2.56 3.5-4.72 6-4.72s6 2.16 6 4.72c-1.57 1.46-3.97 2.28-6 2.28z"/>
+                </svg>
+            </div>
+            <div class="nav-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- little interactive preview (optional) saat klik kirim -->
+    <script>
+        (function() {
+            const sendButton = document.querySelector('.send-btn');
+            if (sendButton) {
+                sendButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('💰 Transfer simulasi: Rp 150.000 ke Rina Andriani berhasil (UI demo)');
+                });
+            }
+            // sentuhan interaktif buat pilih kontak (simple)
+            const contacts = document.querySelectorAll('.contact-item');
+            contacts.forEach(contact => {
+                contact.addEventListener('click', function() {
+                    contacts.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
