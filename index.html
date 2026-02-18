@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>NOVA PAY • Transfer</title>
+    <title>Nova • Modern Wallet</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -21,631 +23,1890 @@
             padding: 16px;
         }
 
-        /* card utama — smooth glassmorphism hitam-ungu */
-        .app-container {
-            max-width: 420px;
-            width: 100%;
+       /* Perbaikan layout utama */
+.app-wrapper {
+    max-width: 420px;
+    width: 100%;
+    position: relative;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Untuk laptop/PC */
+@media (min-width: 1024px) {
+    .app-wrapper {
+        max-width: 1200px;
+        height: 800px;
+    }
+}
+
+/* Pastikan home page bisa discroll dengan baik */
+.home-page, .scan-page, #notifications-page, #history-page, #settings-page {
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #4a3670 #1e1730;
+}
+
+/* Custom scrollbar */
+.home-page::-webkit-scrollbar,
+.scan-page::-webkit-scrollbar,
+#notifications-page::-webkit-scrollbar,
+#history-page::-webkit-scrollbar,
+#settings-page::-webkit-scrollbar {
+    width: 6px;
+}
+
+.home-page::-webkit-scrollbar-track,
+.scan-page::-webkit-scrollbar-track,
+#notifications-page::-webkit-scrollbar-track,
+#history-page::-webkit-scrollbar-track,
+#settings-page::-webkit-scrollbar-track {
+    background: #1e1730;
+}
+
+.home-page::-webkit-scrollbar-thumb,
+.scan-page::-webkit-scrollbar-thumb,
+#notifications-page::-webkit-scrollbar-thumb,
+#history-page::-webkit-scrollbar-thumb,
+#settings-page::-webkit-scrollbar-thumb {
+    background: #4a3670;
+    border-radius: 10px;
+}
+
+.home-page::-webkit-scrollbar-thumb:hover,
+.scan-page::-webkit-scrollbar-thumb:hover,
+#notifications-page::-webkit-scrollbar-thumb:hover,
+#history-page::-webkit-scrollbar-thumb:hover,
+#settings-page::-webkit-scrollbar-thumb:hover {
+    background: #6b4b9a;
+}
+        /* Card base style */
+        .auth-card {
             background: rgba(18, 18, 28, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(138, 43, 226, 0.15);
-            border-radius: 40px;
-            padding: 24px 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(160, 80, 255, 0.1) inset, 0 0 30px rgba(120, 40, 200, 0.3);
-            transition: all 0.2s ease;
+            border-radius: 32px;
+            padding: 32px 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(160, 80, 255, 0.1) inset;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: cardAppear 0.4s ease-out;
         }
 
-        /* header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
-            padding: 0 4px;
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        /* Logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
         }
 
         .logo-icon {
             background: linear-gradient(145deg, #9f4bff, #6c2bd2);
-            width: 40px;
-            height: 40px;
+            width: 56px;
+            height: 56px;
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 18px #4a1e9e40;
+            margin: 0 auto 12px;
+            box-shadow: 0 15px 25px #4a1e9e80;
         }
 
         .logo-icon svg {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             fill: white;
         }
 
         .logo-text {
             font-weight: 700;
-            font-size: 22px;
-            letter-spacing: -0.5px;
+            font-size: 24px;
             background: linear-gradient(130deg, #ffffff 20%, #d4b0ff 90%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
 
-        .profile-btn {
-            background: rgba(30, 25, 45, 0.8);
-            border: 1px solid #7a3ee5;
-            border-radius: 30px;
-            padding: 8px 12px 8px 8px;
+        /* Input groups */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            color: #a89cc0;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 0 10px #9f4bff30;
+            gap: 6px;
         }
 
-        .profile-pic {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(145deg, #b87bff, #6f32db);
+        .input-wrapper {
+            background: #161129;
+            border-radius: 20px;
+            padding: 4px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1.5px solid #332550;
+            transition: all 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #9f4bff;
+            box-shadow: 0 0 0 3px #9f4bff20;
+        }
+
+        .input-wrapper svg {
+            fill: #7a5ea8;
+            width: 20px;
+            height: 20px;
+        }
+
+        .input-wrapper input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            color: white;
+            font-size: 15px;
+            padding: 16px 0;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #4a3d60;
+        }
+
+        /* Password toggle */
+        .password-toggle {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .password-toggle:hover {
+            background: #2a1f3a;
+        }
+
+        /* Forgot password link */
+        .forgot-link {
+            text-align: right;
+            margin: 8px 0 16px;
+        }
+
+        .forgot-link span {
+            color: #b591ff;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .forgot-link span:hover {
+            color: #d4b0ff;
+            text-decoration: underline;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0;
+            color: #4a3d60;
+            font-size: 13px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #332550;
+        }
+
+        /* Register prompt */
+        .register-prompt {
+            text-align: center;
+            color: #a89cc0;
+            font-size: 14px;
+        }
+
+        .register-prompt span {
+            color: #b591ff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .register-prompt span:hover {
+            color: #d4b0ff;
+            text-decoration: underline;
+        }
+
+        /* Button */
+        .auth-btn {
+            background: linear-gradient(115deg, #8a42f5, #6232cb);
+            width: 100%;
+            border: none;
+            border-radius: 24px;
+            padding: 16px 0;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 24px 0 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 10px 20px -5px #4c1f9e;
+        }
+
+        .auth-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 10px -3px #4c1f9e;
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Fullscreen OTP/Forgot panels */
+        .fullscreen-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0a0f;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            animation: panelSlide 0.3s ease-out;
+        }
+
+        @keyframes panelSlide {
+            from {
+                opacity: 0;
+                transform: scale(1.1);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .panel-content {
+            max-width: 400px;
+            width: 100%;
+            background: rgba(18, 18, 28, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 32px 24px;
+            border: 1px solid #332550;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .back-btn {
+            background: #1e1730;
+            border: 1px solid #4a3670;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .back-btn svg {
+            fill: #b591ff;
+            width: 20px;
+            height: 20px;
+        }
+
+        .back-btn:hover {
+            background: #2a1f40;
+        }
+
+        .panel-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* OTP Input */
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 32px 0;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 64px;
+            background: #161129;
+            border: 2px solid #332550;
+            border-radius: 16px;
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .otp-input:focus {
+            border-color: #9f4bff;
+            box-shadow: 0 0 0 3px #9f4bff30;
+        }
+
+        .otp-info {
+            text-align: center;
+            color: #a89cc0;
+            font-size: 14px;
+            margin: 16px 0;
+        }
+
+        .otp-timer {
+            color: #b591ff;
+            font-weight: 500;
+        }
+
+        .resend-btn {
+            background: transparent;
+            border: 2px solid #4a3670;
+            color: white;
+            padding: 14px;
+            border-radius: 30px;
+            width: 100%;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .resend-btn:hover:not(:disabled) {
+            background: #4a3670;
+        }
+
+        .resend-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ========== HOME PAGE STYLES ========== */
+        .home-page {
+            background: rgba(18, 18, 28, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.15);
+            animation: cardAppear 0.4s ease-out;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* Header dengan saldo ala GoPay */
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding: 8px 4px;
+        }
+
+        .balance-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .balance-label {
+            color: #a89cc0;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .balance-amount-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .balance-amount {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .balance-amount.blurred {
+            filter: blur(5px);
+            user-select: none;
+        }
+
+        .toggle-balance {
+            background: #1e1730;
+            border: 1px solid #4a3670;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-balance i {
+            color: #b591ff;
+            font-size: 18px;
+        }
+
+        .toggle-balance:hover {
+            background: #2a1f40;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .profile-name {
             color: white;
-            font-weight: 500;
-            font-size: 14px;
-            margin-right: 4px;
-        }
-
-        /* saldo card */
-        .balance-card {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 32px;
-            padding: 22px 20px;
-            margin-bottom: 28px;
-            border: 1px solid rgba(170, 100, 255, 0.2);
-            border-bottom: 2px solid #9147ff30;
-            box-shadow: 0 15px 25px -15px #000000cc, inset 0 1px 1px #ffffff0d;
-            backdrop-filter: blur(10px);
-        }
-
-        .balance-label {
-            color: #b4a6d9;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-
-        .balance-amount {
-            font-size: 42px;
-            font-weight: 700;
-            color: white;
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-        }
-
-        .balance-currency {
-            font-size: 22px;
-            color: #b380ff;
             font-weight: 600;
         }
 
-        .balance-note {
-            color: #8a7baa;
-            font-size: 13px;
-            margin-top: 12px;
-            border-top: 1px dashed #4a2d7a40;
-            padding-top: 12px;
+        .profile-badge {
+            background: linear-gradient(145deg, #ffd700, #ffb347);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #1a1a1a;
         }
 
-        /* fitur quick actions */
-        .quick-actions {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 32px;
+        .profile-badge.vip {
+            background: linear-gradient(145deg, #c0c0c0, #e8e8e8);
         }
 
-        .action-item {
-            flex: 1;
-            background: rgba(24, 18, 34, 0.7);
-            border-radius: 24px;
-            padding: 12px 0;
+        /* Garis tipis */
+        .thin-line {
+            height: 1px;
+            background: #332550;
+            margin: 20px 0;
+        }
+
+        /* Section title */
+        .section-title {
+            color: #a89cc0;
+            font-size: 14px;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        /* Grid untuk aplikasi pembayaran */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .app-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            border: 1px solid #3b2758;
-            transition: all 0.15s;
-            backdrop-filter: blur(8px);
         }
 
-        .action-item.active {
-            background: #6b21ff20;
-            border-color: #b57cff;
-            box-shadow: 0 0 15px #9f4bff;
-        }
-
-        .action-icon {
-            background: #2a1b3a;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            background: #1e1730;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #dbbfff;
+            border: 1px solid #4a3670;
+            transition: all 0.2s;
+            overflow: hidden;
         }
 
-        .action-item.active .action-icon {
-            background: #8a4eff;
-            color: white;
-            box-shadow: 0 0 15px #c598ff;
+        .app-icon img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
         }
 
-        .action-label {
-            color: #cbb5f0;
+        .app-icon i {
+            font-size: 28px;
+            color: #b591ff;
+        }
+
+        .app-name {
+            color: #a89cc0;
+            font-size: 11px;
             font-weight: 500;
-            font-size: 13px;
+            text-align: center;
         }
 
-        /* form transfer (card) */
-        .transfer-section {
-            background: rgba(12, 10, 20, 0.7);
-            border-radius: 36px;
-            padding: 24px 18px;
-            border: 1px solid #5a2ca050;
-            margin-bottom: 24px;
-            backdrop-filter: blur(12px);
+        .app-item:hover .app-icon {
+            border-color: #b27aff;
+            transform: translateY(-2px);
         }
 
-        .section-title {
+        /* Responsive untuk laptop */
+        @media (min-width: 1024px) {
+            .apps-grid {
+                grid-template-columns: repeat(8, 1fr);
+            }
+            
+            .home-page {
+                padding: 32px;
+            }
+            
+            .balance-amount {
+                font-size: 36px;
+            }
+        }
+
+        /* ========== BOTTOM NAVIGATION ========== */
+        .bottom-nav {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            background: rgba(18, 18, 28, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(138, 43, 226, 0.15);
+            border-radius: 40px 40px 0 0;
+            padding: 8px 12px 4px;
+            margin-top: auto;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #6b5b8a;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 8px 0 4px;
+            min-width: 60px;
+            position: relative;
+        }
+
+        .nav-item i {
+            font-size: 22px;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: #b27aff;
+        }
+
+        .nav-item.active i {
+            transform: translateY(-2px);
+            text-shadow: 0 0 15px #b27aff;
+        }
+
+        .nav-item:hover {
+            color: #d4b0ff;
+        }
+
+        /* Special style untuk scan item */
+        .scan-item {
+            position: relative;
+            margin-top: -20px;
+        }
+
+        .scan-icon {
+            background: linear-gradient(145deg, #8a42f5, #6232cb);
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+            box-shadow: 0 10px 20px #4c1f9e;
+            border: 3px solid #1e1730;
+        }
+
+        .scan-icon i {
+            font-size: 26px;
             color: white;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
+        }
+
+        .scan-item span {
+            margin-top: 4px;
+        }
+
+        /* ========== SCAN QRIS PAGE ========== */
+        .scan-page {
+            background: #0a0a0f;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 32px;
+            overflow: hidden;
+        }
+
+        .camera-view {
+            flex: 1;
+            background: #000;
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
         }
 
-        .section-title span {
-            background: #9147ff;
-            width: 8px;
-            height: 8px;
-            border-radius: 20px;
-            display: inline-block;
-            box-shadow: 0 0 12px #b47aff;
+        .camera-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .search-user {
-            background: #171322;
+        .camera-placeholder i {
+            font-size: 80px;
+            color: #4a3670;
+            opacity: 0.5;
+        }
+
+        .scan-frame {
+            width: 250px;
+            height: 250px;
+            border: 2px solid rgba(180, 130, 255, 0.5);
             border-radius: 40px;
-            padding: 8px 18px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.5);
+        }
+
+        .scan-frame::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid #b27aff;
+            border-radius: 42px;
+            animation: pulse 2s infinite;
+        }
+
+        .scan-frame::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #b27aff, transparent);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+            100% { opacity: 0.5; transform: scale(1); }
+        }
+
+        @keyframes scan {
+            0% { top: 20%; }
+            50% { top: 80%; }
+            100% { top: 20%; }
+        }
+
+        .scan-instruction {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 20;
+        }
+
+        /* ========== SETTINGS PAGE ========== */
+        .settings-page {
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .settings-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            border: 1px solid #6d3fbb;
-            margin-bottom: 24px;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding: 16px;
+            background: #161129;
+            border-radius: 30px;
+            border: 1px solid #332550;
         }
 
-        .search-user svg {
-            fill: #b591ff;
-            width: 20px;
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .search-user input {
-            background: transparent;
-            border: none;
-            outline: none;
-            width: 100%;
-            color: #f0e6ff;
-            font-size: 16px;
-            padding: 12px 0;
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #8a42f5, #6232cb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            border: 3px solid #b591ff;
         }
 
-        .search-user input::placeholder {
-            color: #5d4d7a;
-            font-weight: 400;
-        }
-
-        /* daftar kontak / user tujuan */
-        .contact-list {
+        .profile-details {
             display: flex;
             flex-direction: column;
             gap: 4px;
-            margin-bottom: 28px;
         }
 
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            background: #161129;
-            border-radius: 60px;
-            border: 1px solid transparent;
-            transition: all 0.15s;
-        }
-
-        .contact-item.selected {
-            border-color: #b27aff;
-            background: #281e3d;
-            box-shadow: 0 0 0 2px #7b3feb30;
-        }
-
-        .contact-avatar {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(145deg, #5d36a0, #351b5a);
-            border-radius: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
+        .profile-details h3 {
+            color: white;
             font-size: 18px;
-            color: white;
-            box-shadow: 0 6px 12px #1a0d2e;
         }
 
-        .contact-detail {
-            flex: 1;
+        .profile-badge {
+            background: linear-gradient(145deg, #ffd700, #ffb347);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: inline-block;
+            width: fit-content;
         }
 
-        .contact-name {
-            color: white;
-            font-weight: 600;
-            font-size: 17px;
-            margin-bottom: 4px;
+        .settings-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .contact-phone {
-            color: #9470c4;
-            font-size: 13px;
-        }
-
-        /* input nominal */
-        .nominal-box {
-            background: #0e0b16;
-            border-radius: 30px;
-            padding: 12px 20px;
-            border: 1px solid #6534af;
-            margin: 24px 0 18px;
-        }
-
-        .nominal-label {
-            color: #ac92d4;
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-
-        .nominal-input-area {
+        .settings-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-        }
-
-        .nominal-currency {
-            color: #b07eff;
-            font-size: 26px;
-            font-weight: 700;
-        }
-
-        .nominal-input-area input {
-            background: transparent;
-            border: none;
-            outline: none;
-            width: 100%;
-            font-size: 32px;
-            font-weight: 600;
-            color: white;
-        }
-
-        .nominal-input-area input::placeholder {
-            color: #332c44;
-        }
-
-        .note-area {
+            gap: 16px;
+            padding: 16px 20px;
             background: #161129;
             border-radius: 20px;
-            padding: 8px 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #513587;
-            margin: 10px 0 16px;
-        }
-
-        .note-area svg {
-            fill: #b185ff;
-        }
-
-        .note-area input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #d9c7ff;
-            font-size: 15px;
-            width: 100%;
-            padding: 14px 0;
-        }
-
-        .note-area input::placeholder {
-            color: #5b4b79;
-        }
-
-        /* tombol kirim */
-        .send-btn {
-            background: linear-gradient(115deg, #8a42f5, #6232cb);
-            width: 100%;
-            border: none;
-            border-radius: 60px;
-            padding: 22px 0;
+            border: 1px solid #332550;
+            cursor: pointer;
+            transition: all 0.2s;
             color: white;
-            font-weight: 700;
+        }
+
+        .settings-item:hover {
+            border-color: #b27aff;
+            background: #1e1730;
+        }
+
+        .settings-item i {
+            width: 24px;
+            color: #b591ff;
             font-size: 20px;
+        }
+
+        .settings-item.danger {
+            color: #ff6b6b;
+        }
+
+        .settings-item.danger i {
+            color: #ff6b6b;
+        }
+
+        /* Empty state untuk notif & riwayat */
+        .empty-state {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-top: 20px;
-            box-shadow: 0 18px 30px -8px #4c1f9e, 0 0 0 1px #c394ff inset;
-            transition: all 0.2s;
-            cursor: pointer;
+            height: 80%;
+            color: #4a3d60;
         }
 
-        .send-btn:active {
-            transform: scale(0.97);
-            background: #722ed1;
-            box-shadow: 0 8px 16px #2f0f6a;
+        .empty-state i {
+            font-size: 80px;
+            margin-bottom: 16px;
         }
 
-        .send-btn svg {
-            fill: white;
-            width: 24px;
+        .empty-state p {
+            font-size: 16px;
         }
 
-        /* bottom nav */
-        .bottom-nav {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding: 0 12px;
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 70px;
         }
 
-        .nav-icon {
-            background: transparent;
-            padding: 12px;
-            border-radius: 60px;
-            color: #67548b;
-            transition: all 0.1s;
-        }
-
-        .nav-icon.active {
-            color: #cdadff;
-            background: #311f4a;
-            box-shadow: 0 0 16px #9147ff50;
-        }
-
-        .nav-icon svg {
-            fill: currentColor;
-            width: 24px;
-            height: 24px;
-        }
-
-        /* responsive kecil (hp) mantap */
+        /* Responsive */
         @media (max-width: 380px) {
-            .balance-amount {
-                font-size: 34px;
+            .nav-item {
+                min-width: 50px;
+                font-size: 10px;
             }
-            .action-icon {
-                width: 40px;
-                height: 40px;
+            
+            .nav-item i {
+                font-size: 20px;
+            }
+            
+            .scan-icon {
+                width: 52px;
+                height: 52px;
+            }
+            
+            .scan-icon i {
+                font-size: 22px;
+            }
+            
+            .app-icon {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .app-icon img, .app-icon i {
+                width: 24px;
+                height: 24px;
+                font-size: 24px;
             }
         }
 
-        /* sentuhan ungu gelap smooth */
-        ::selection {
-            background: #a16eff;
-            color: black;
-        }
+        /* Sembunyikan navbar secara default */
+.bottom-nav {
+    display: none;
+}
+
+/* Tampilkan navbar hanya di halaman beranda */
+.bottom-nav.show {
+    display: flex;
+}
+
+/* Atur main content agar menyesuaikan */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    height: 100%;
+}
+
+/* Pastikan home page punya margin bottom untuk navbar */
+#home-page {
+    padding-bottom: 20px;
+}
+
+/* Untuk laptop/PC */
+@media (min-width: 1024px) {
+    .bottom-nav.show {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- header -->
-        <div class="header">
-            <div class="logo-area">
+    <div class="app-wrapper" id="app">
+        <!-- Login Card (default visible) -->
+        <div id="login-card" class="auth-card">
+            <div class="logo">
                 <div class="logo-icon">
                     <svg viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6-2.28 0-2.56 3.5-4.72 6-4.72s6 2.16 6 4.72c-1.57 1.46-3.97 2.28-6 2.28z"/>
                     </svg>
                 </div>
-                <span class="logo-text">NovaPay</span>
-            </div>
-            <div class="profile-btn">
-                <div class="profile-pic">AK</div>
-                <span class="profile-name">Alex</span>
-            </div>
-        </div>
-
-        <!-- kartu saldo -->
-        <div class="balance-card">
-            <div class="balance-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#b380ff">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                </svg>
-                Total saldo
-            </div>
-            <div class="balance-amount">
-                <span class="balance-currency">Rp</span> 2.450.000
-            </div>
-            <div class="balance-note">
-                <span>💳 •••• 3425</span>  •  limit harian Rp5jt
-            </div>
-        </div>
-
-        <!-- quick action (mirip dana) -->
-        <div class="quick-actions">
-            <div class="action-item active">
-                <div class="action-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
-                    </svg>
-                </div>
-                <span class="action-label">Transfer</span>
-            </div>
-            <div class="action-item">
-                <div class="action-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                    </svg>
-                </div>
-                <span class="action-label">Isi</span>
-            </div>
-            <div class="action-item">
-                <div class="action-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 14v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2zm-9 3l-6-6 6-6 1.41 1.41L7.83 10H20v2H7.83l3.58 3.59L10 17z"/>
-                    </svg>
-                </div>
-                <span class="action-label">Tarik</span>
-            </div>
-            <div class="action-item">
-                <div class="action-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-1 .05 1.16.84 2 1.87 2 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-                    </svg>
-                </div>
-                <span class="action-label">Kontak</span>
-            </div>
-        </div>
-
-        <!-- transfer section -->
-        <div class="transfer-section">
-            <div class="section-title">
-                <span></span> Transfer ke pengguna
+                <div class="logo-text">Nova</div>
             </div>
 
-            <!-- search -->
-            <div class="search-user">
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                </svg>
-                <input type="text" placeholder="Cari nama atau nomor telepon" value="Rina">
-            </div>
-
-            <!-- pilih kontak -->
-            <div class="contact-list">
-                <div class="contact-item selected">
-                    <div class="contact-avatar">RN</div>
-                    <div class="contact-detail">
-                        <div class="contact-name">Rina Andriani</div>
-                        <div class="contact-phone">+62 812-3456-7890</div>
+            <form id="login-form" onsubmit="event.preventDefault(); handleLogin()">
+                <div class="input-group">
+                    <div class="input-label">Username</div>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        <input type="text" id="login-username" placeholder="Masukkan username" required>
                     </div>
                 </div>
-                <div class="contact-item">
-                    <div class="contact-avatar">DW</div>
-                    <div class="contact-detail">
-                        <div class="contact-name">Dwiki Prasetyo</div>
-                        <div class="contact-phone">+62 857-8901-2345</div>
+
+                <div class="input-group">
+                    <div class="input-label">Password</div>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        <input type="password" id="login-password" placeholder="Masukkan password" required>
+                        <div class="password-toggle" onclick="togglePassword('login-password', this)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="#7a5ea8">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-                <div class="contact-item">
-                    <div class="contact-avatar">MF</div>
-                    <div class="contact-detail">
-                        <div class="contact-name">Maya Fadila</div>
-                        <div class="contact-phone">+62 821-3456-7890</div>
-                    </div>
+
+                <div class="forgot-link">
+                    <span onclick="showForgotPanel()">lupa password?</span>
                 </div>
-            </div>
 
-            <!-- nominal input -->
-            <div class="nominal-box">
-                <div class="nominal-label">Nominal transfer</div>
-                <div class="nominal-input-area">
-                    <span class="nominal-currency">Rp</span>
-                    <input type="text" placeholder="0" value="150.000">
+                <button type="submit" class="auth-btn">Masuk</button>
+
+                <div class="divider">
+                    <div class="divider-line"></div>
+                    <span>atau</span>
+                    <div class="divider-line"></div>
                 </div>
-            </div>
 
-            <!-- catatan (opsional) -->
-            <div class="note-area">
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                </svg>
-                <input type="text" placeholder="Tambahkan catatan (opsional)">
-            </div>
-
-            <!-- tombol kirim dana -->
-            <button class="send-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                </svg>
-                Kirim Rp 150.000
-            </button>
+                <div class="register-prompt">
+                    belum punya akun? <span onclick="showRegister()">register sekarang!!</span>
+                </div>
+            </form>
         </div>
 
-        <!-- bottom navigation (ala dana)-->
-        <div class="bottom-nav">
-            <div class="nav-icon active">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2L2 7v12l10 5 10-5V7l-10-5zm0 2.2l6 3v8.4l-6 3-6-3V7.2l6-3zM8 9.5v4.2l4 2 4-2V9.5l-4-2-4 2z"/>
-                </svg>
+        <!-- Register Card (hidden by default) -->
+        <div id="register-card" class="auth-card hidden">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                    </svg>
+                </div>
+                <div class="logo-text">Daftar Akun</div>
             </div>
-            <div class="nav-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 4c2.76 0 5 2.24 5 5s-2.24 5-5 5-5-2.24-5-5 2.24-5 5-5z"/>
-                </svg>
+
+            <form id="register-form" onsubmit="event.preventDefault(); processRegister()">
+                <div class="input-group">
+                    <div class="input-label">Username</div>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        <input type="text" id="reg-username" placeholder="Pilih username" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label">Nomor HP</div>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 15.5c-1.2 0-2.4-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2c-2.8-1.5-5.2-3.9-6.7-6.7l2.2-2.2c.3-.3.4-.7.2-1-.4-1.2-.6-2.4-.6-3.6 0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1 0 9.4 7.6 17 17 17 .6 0 1-.4 1-1v-3.5c0-.6-.4-1-1-1z"/>
+                        </svg>
+                        <input type="tel" id="reg-phone" placeholder="Contoh: 08123456789" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label">Password</div>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        <input type="password" id="reg-password" placeholder="Buat password" required>
+                        <div class="password-toggle" onclick="togglePassword('reg-password', this)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="#7a5ea8">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label">Konfirmasi Password</div>
+                    <div class="input-wrapper">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        <input type="password" id="reg-confirm" placeholder="Ulangi password" required>
+                        <div class="password-toggle" onclick="togglePassword('reg-confirm', this)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="#7a5ea8">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn">Daftar</button>
+
+                <div class="register-prompt">
+                    sudah punya akun? <span onclick="showLogin()">masuk</span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Home Page (hidden by default) -->
+        <div id="home-page" class="home-page hidden">
+            <!-- Header dengan saldo -->
+            <div class="balance-header">
+                <div class="balance-left">
+                    <div class="balance-label">Total Saldo</div>
+                    <div class="balance-amount-wrapper">
+                        <div class="balance-amount" id="balance-amount">Rp 2.450.000</div>
+                        <div class="toggle-balance" onclick="toggleBalance()">
+                            <i class="fas fa-eye" id="toggle-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-header">
+                    <span class="profile-name" id="header-username">Alex</span>
+                    <span class="profile-badge vip">VIP</span>
+                </div>
             </div>
-            <div class="nav-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6-2.28 0-2.56 3.5-4.72 6-4.72s6 2.16 6 4.72c-1.57 1.46-3.97 2.28-6 2.28z"/>
-                </svg>
+
+            <!-- Garis tipis -->
+            <div class="thin-line"></div>
+
+            <!-- 4 Aplikasi pembayaran pertama -->
+            <div class="section-title">Pembayaran</div>
+            <div class="apps-grid">
+                <div class="app-item">
+                    <div class="app-icon">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234a90e2'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z'/%3E%3C/svg%3E" alt="GoPay">
+                    </div>
+                    <span class="app-name">GoPay</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232db7c1'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z'/%3E%3C/svg%3E" alt="DANA">
+                    </div>
+                    <span class="app-name">DANA</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234280f4'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z'/%3E%3C/svg%3E" alt="OVO">
+                    </div>
+                    <span class="app-name">OVO</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ee4d2d'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z'/%3E%3C/svg%3E" alt="ShopeePay">
+                    </div>
+                    <span class="app-name">ShopeePay</span>
+                </div>
             </div>
-            <div class="nav-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-                </svg>
+
+            <!-- Garis tipis kedua -->
+            <div class="thin-line"></div>
+
+            <!-- 8 Aplikasi lainnya -->
+            <div class="section-title">Layanan Lainnya</div>
+            <div class="apps-grid">
+                <div class="app-item">
+                    <div class="app-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <span class="app-name">Listrik</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <span class="app-name">PDAM</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <span class="app-name">Internet</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <span class="app-name">Pulsa</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <span class="app-name">TV Kabel</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <span class="app-name">Game</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <span class="app-name">Streaming</span>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <span class="app-name">Pendidikan</span>
+                </div>
             </div>
+        </div>
+
+        <!-- Notifications Page (hidden) -->
+        <div id="notifications-page" class="home-page hidden">
+            <div class="empty-state">
+                <i class="fas fa-bell-slash"></i>
+                <p>Tidak ada notifikasi</p>
+            </div>
+        </div>
+
+        <!-- Scan QRIS Page (hidden) -->
+        <div id="scan-page" class="scan-page hidden">
+            <div class="camera-view">
+                <div class="camera-placeholder">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <div class="scan-frame"></div>
+                <div class="scan-instruction">
+                    Arahkan kamera ke kode QR
+                </div>
+            </div>
+        </div>
+
+        <!-- History Page (hidden) -->
+        <div id="history-page" class="home-page hidden">
+            <div class="empty-state">
+                <i class="fas fa-history"></i>
+                <p>Belum ada riwayat transaksi</p>
+            </div>
+        </div>
+
+        <!-- Settings Page (hidden) -->
+        <div id="settings-page" class="home-page hidden">
+            <div class="settings-header">
+                <div class="profile-info">
+                    <div class="profile-avatar" id="settings-avatar">A</div>
+                    <div class="profile-details">
+                        <h3 id="settings-username">Alexander</h3>
+                        <span class="profile-badge vip">VIP Member</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-menu">
+                <div class="settings-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Account Settings</span>
+                </div>
+                <div class="settings-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Privacy & Security</span>
+                </div>
+                <div class="settings-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </div>
+                <div class="settings-item">
+                    <i class="fas fa-language"></i>
+                    <span>Language</span>
+                </div>
+                <div class="settings-item">
+                    <i class="fas fa-paint-brush"></i>
+                    <span>Theme</span>
+                </div>
+                <div class="thin-line"></div>
+                <div class="settings-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </div>
+                <div class="settings-item" onclick="showCreateAccount()">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Create New Account</span>
+                </div>
+                <div class="settings-item danger">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Delete Account</span>
+                </div>
+            </div>
+        </div>
+
+   <div class="bottom-nav" id="bottom-nav">
+    <div class="nav-item active" data-page="home">
+        <i class="fas fa-home"></i>
+        <span>Beranda</span>
+    </div>
+    <div class="nav-item" data-page="notifications">
+        <i class="fas fa-bell"></i>
+        <span>Notif</span>
+    </div>
+    <div class="nav-item scan-item" data-page="scan">
+        <div class="scan-icon">
+            <i class="fas fa-qrcode"></i>
+        </div>
+        <span>Scan</span>
+    </div>
+    <div class="nav-item" data-page="history">
+        <i class="fas fa-history"></i>
+        <span>Riwayat</span>
+    </div>
+    <div class="nav-item" data-page="settings">
+        <i class="fas fa-cog"></i>
+        <span>Setting</span>
+    </div>
+         </div>
+             </div>
+
+    <!-- OTP Verification Panel (fullscreen) -->
+    <div id="otp-panel" class="fullscreen-panel hidden">
+        <div class="panel-content">
+            <div class="panel-header">
+                <div class="back-btn" onclick="hideOTPPanel()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                    </svg>
+                </div>
+                <div class="panel-title">Verifikasi OTP</div>
+            </div>
+
+            <div class="otp-info">
+                Kode telah dikirim ke <span id="otp-phone-display">+62</span>
+            </div>
+
+            <div class="otp-container">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 0)" onkeydown="handleOTPKey(event, this, 0)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 1)" onkeydown="handleOTPKey(event, this, 1)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 2)" onkeydown="handleOTPKey(event, this, 2)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 3)" onkeydown="handleOTPKey(event, this, 3)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 4)" onkeydown="handleOTPKey(event, this, 4)">
+                <input type="text" class="otp-input" maxlength="1" onkeyup="moveToNext(this, 5)" onkeydown="handleOTPKey(event, this, 5)">
+            </div>
+
+            <div class="otp-info">
+                <span class="otp-timer" id="otp-timer">02:00</span>
+            </div>
+
+            <button class="resend-btn" id="resend-otp" onclick="resendOTP()" disabled>Kirim Ulang OTP</button>
+            <button class="auth-btn" onclick="verifyOTP()">Verifikasi</button>
         </div>
     </div>
 
-    <!-- little interactive preview (optional) saat klik kirim -->
+    <!-- Forgot Password Panel (fullscreen) -->
+    <div id="forgot-panel" class="fullscreen-panel hidden">
+        <div class="panel-content">
+            <div class="panel-header">
+                <div class="back-btn" onclick="hideForgotPanel()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                    </svg>
+                </div>
+                <div class="panel-title">Lupa Password</div>
+            </div>
+
+            <div class="input-group">
+                <div class="input-label">Nomor HP Terdaftar</div>
+                <div class="input-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 15.5c-1.2 0-2.4-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2c-2.8-1.5-5.2-3.9-6.7-6.7l2.2-2.2c.3-.3.4-.7.2-1-.4-1.2-.6-2.4-.6-3.6 0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1 0 9.4 7.6 17 17 17 .6 0 1-.4 1-1v-3.5c0-.6-.4-1-1-1z"/>
+                    </svg>
+                    <input type="tel" id="forgot-phone" placeholder="Masukkan nomor HP" required>
+                </div>
+            </div>
+
+            <button class="auth-btn" onclick="requestForgotOTP()">Kirim OTP</button>
+        </div>
+    </div>
+
+    <!-- Reset Password Panel (fullscreen) -->
+    <div id="reset-panel" class="fullscreen-panel hidden">
+        <div class="panel-content">
+            <div class="panel-header">
+                <div class="back-btn" onclick="hideResetPanel()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                    </svg>
+                </div>
+                <div class="panel-title">Reset Password</div>
+            </div>
+
+            <div class="input-group">
+                <div class="input-label">Password Baru</div>
+                <div class="input-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    <input type="password" id="new-password" placeholder="Password baru" required>
+                    <div class="password-toggle" onclick="togglePassword('new-password', this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#7a5ea8">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="input-label">Konfirmasi Password Baru</div>
+                <div class="input-wrapper">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    <input type="password" id="confirm-password" placeholder="Ulangi password baru" required>
+                    <div class="password-toggle" onclick="togglePassword('confirm-password', this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#7a5ea8">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <button class="auth-btn" onclick="resetPassword()">Reset Password</button>
+        </div>
+    </div>
+
     <script>
-        (function() {
-            const sendButton = document.querySelector('.send-btn');
-            if (sendButton) {
-                sendButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    alert('💰 Transfer simulasi: Rp 150.000 ke Rina Andriani berhasil (UI demo)');
-                });
+        // ==================== CONFIG ====================
+        const FONNTE_API_KEY = 'YOUR_FONNTE_API_KEY'; // Ganti dengan API key Fonnte
+
+        // Database users
+        let users = JSON.parse(localStorage.getItem('nova_users')) || [];
+
+        // State
+        let currentUser = null;
+        let isBalanceVisible = true;
+
+        // ==================== UI FUNCTIONS ====================
+        function showLogin() {
+            document.getElementById('login-card').classList.remove('hidden');
+            document.getElementById('register-card').classList.add('hidden');
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('notifications-page').classList.add('hidden');
+            document.getElementById('scan-page').classList.add('hidden');
+            document.getElementById('history-page').classList.add('hidden');
+            document.getElementById('settings-page').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('login-card').classList.add('hidden');
+            document.getElementById('register-card').classList.remove('hidden');
+        }
+
+        function showHome(username) {
+    // Hide all auth cards
+    document.getElementById('login-card').classList.add('hidden');
+    document.getElementById('register-card').classList.add('hidden');
+    
+    // Hide all main pages
+    document.getElementById('notifications-page').classList.add('hidden');
+    document.getElementById('scan-page').classList.add('hidden');
+    document.getElementById('history-page').classList.add('hidden');
+    document.getElementById('settings-page').classList.add('hidden');
+    
+    // Show home page
+    document.getElementById('home-page').classList.remove('hidden');
+    
+    // Tampilkan navbar hanya di halaman beranda
+    document.getElementById('bottom-nav').classList.add('show');
+    
+    // Update username
+    document.getElementById('header-username').textContent = username;
+    document.getElementById('settings-username').textContent = username;
+    document.getElementById('settings-avatar').textContent = username.charAt(0).toUpperCase();
+    document.getElementById('user-greeting').textContent = username;
+    
+    // Update nav active state
+    updateNavActive('home');
+}
+
+function showPage(page) {
+    // Hide all pages
+    document.getElementById('home-page').classList.add('hidden');
+    document.getElementById('notifications-page').classList.add('hidden');
+    document.getElementById('scan-page').classList.add('hidden');
+    document.getElementById('history-page').classList.add('hidden');
+    document.getElementById('settings-page').classList.add('hidden');
+    
+    // Sembunyikan navbar di semua halaman kecuali beranda
+    document.getElementById('bottom-nav').classList.remove('show');
+    
+    // Show selected page
+    switch(page) {
+        case 'home':
+            document.getElementById('home-page').classList.remove('hidden');
+            document.getElementById('bottom-nav').classList.add('show'); // Tampilkan navbar hanya di home
+            break;
+        case 'notifications':
+            document.getElementById('notifications-page').classList.remove('hidden');
+            break;
+        case 'scan':
+            document.getElementById('scan-page').classList.remove('hidden');
+            break;
+        case 'history':
+            document.getElementById('history-page').classList.remove('hidden');
+            break;
+        case 'settings':
+            document.getElementById('settings-page').classList.remove('hidden');
+            break;
+    }
+    
+    updateNavActive(page);
+}
+
+// Tambahkan fungsi logout yang sudah diperbaiki
+function logout() {
+    currentUser = null;
+    document.getElementById('bottom-nav').classList.remove('show'); // Sembunyikan navbar saat logout
+    showLogin();
+}
+
+        function showCreateAccount() {
+            showRegister();
+        }
+
+        // ==================== PASSWORD TOGGLE ====================
+        function togglePassword(inputId, element) {
+            const input = document.getElementById(inputId);
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            // Change icon
+            const svg = element.querySelector('svg');
+            if (type === 'text') {
+                svg.innerHTML = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/><path d="M2 2L22 22"/>';
+            } else {
+                svg.innerHTML = '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>';
             }
-            // sentuhan interaktif buat pilih kontak (simple)
-            const contacts = document.querySelectorAll('.contact-item');
-            contacts.forEach(contact => {
-                contact.addEventListener('click', function() {
-                    contacts.forEach(c => c.classList.remove('selected'));
-                    this.classList.add('selected');
+        }
+
+        // ==================== BALANCE TOGGLE ====================
+        function toggleBalance() {
+            const balanceEl = document.getElementById('balance-amount');
+            const iconEl = document.getElementById('toggle-icon');
+            
+            isBalanceVisible = !isBalanceVisible;
+            
+            if (isBalanceVisible) {
+                balanceEl.classList.remove('blurred');
+                balanceEl.textContent = 'Rp 2.450.000';
+                iconEl.className = 'fas fa-eye';
+            } else {
+                balanceEl.classList.add('blurred');
+                balanceEl.textContent = 'Rp •••••••';
+                iconEl.className = 'fas fa-eye-slash';
+            }
+        }
+
+        // ==================== NAVIGATION ====================
+        function updateNavActive(page) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === page) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        function showPage(page) {
+            // Hide all pages
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('notifications-page').classList.add('hidden');
+            document.getElementById('scan-page').classList.add('hidden');
+            document.getElementById('history-page').classList.add('hidden');
+            document.getElementById('settings-page').classList.add('hidden');
+            
+            // Show selected page
+            switch(page) {
+                case 'home':
+                    document.getElementById('home-page').classList.remove('hidden');
+                    break;
+                case 'notifications':
+                    document.getElementById('notifications-page').classList.remove('hidden');
+                    break;
+                case 'scan':
+                    document.getElementById('scan-page').classList.remove('hidden');
+                    break;
+                case 'history':
+                    document.getElementById('history-page').classList.remove('hidden');
+                    break;
+                case 'settings':
+                    document.getElementById('settings-page').classList.remove('hidden');
+                    break;
+            }
+            
+            updateNavActive(page);
+        }
+
+       // Perbaiki fungsi handleLogin
+function handleLogin() {
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    const user = users.find(u => 
+        (u.username === username || u.phone === username) && u.password === password
+    );
+
+    if (user) {
+        currentUser = user;
+        showHome(user.username);
+        document.getElementById('login-username').value = '';
+        document.getElementById('login-password').value = '';
+        
+        // Tampilkan navbar setelah login sukses
+        document.getElementById('bottom-nav').classList.add('show');
+    } else {
+        alert('Username/password salah!');
+    }
+}
+
+// Perbaiki bagian verifikasi OTP register
+if (otp === storedOTP) {
+    if (currentOTPAction === 'register') {
+        // Complete registration
+        const pendingUser = JSON.parse(sessionStorage.getItem('pending_user'));
+        users.push(pendingUser);
+        localStorage.setItem('nova_users', JSON.stringify(users));
+        
+        hideOTPPanel();
+        showHome(pendingUser.username);
+        
+        // Tampilkan navbar setelah register sukses
+        document.getElementById('bottom-nav').classList.add('show');
+        
+        // Clear forms
+        document.getElementById('reg-username').value = '';
+        document.getElementById('reg-phone').value = '';
+        document.getElementById('reg-password').value = '';
+        document.getElementById('reg-confirm').value = '';
+        
+        alert('Registrasi berhasil!');
+    } else if (currentOTPAction === 'forgot') {
+        hideOTPPanel();
+        showResetPanel();
+    }
+    
+    sessionStorage.removeItem('current_otp');
+}
+
+        // ==================== REGISTER ====================
+        function processRegister() {
+            const username = document.getElementById('reg-username').value;
+            const phone = document.getElementById('reg-phone').value;
+            const password = document.getElementById('reg-password').value;
+            const confirm = document.getElementById('reg-confirm').value;
+
+            // Validasi
+            if (!username || !phone || !password || !confirm) {
+                alert('Semua field harus diisi!');
+                return;
+            }
+
+            if (password !== confirm) {
+                alert('Password tidak cocok!');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('Password minimal 6 karakter!');
+                return;
+            }
+
+            // Cek apakah user sudah ada
+            if (users.find(u => u.username === username || u.phone === phone)) {
+                alert('Username atau nomor HP sudah terdaftar!');
+                return;
+            }
+
+            // Simpan data sementara
+            sessionStorage.setItem('pending_user', JSON.stringify({
+                username, phone, password
+            }));
+
+            // Tampilkan panel OTP
+            document.getElementById('otp-phone-display').textContent = phone;
+            showOTPPanel('register');
+            sendOTP(phone, 'registrasi');
+        }
+
+        // ==================== OTP FUNCTIONS ====================
+        let currentOTPAction = null;
+        let otpTimer;
+        let otpTimeLeft = 120;
+
+        function showOTPPanel(action) {
+            currentOTPAction = action;
+            document.getElementById('otp-panel').classList.remove('hidden');
+            startOTPTimer();
+            
+            // Clear OTP inputs
+            document.querySelectorAll('.otp-input').forEach(input => input.value = '');
+            document.querySelectorAll('.otp-input')[0].focus();
+        }
+
+        function hideOTPPanel() {
+            document.getElementById('otp-panel').classList.add('hidden');
+            clearInterval(otpTimer);
+        }
+
+        function showForgotPanel() {
+            document.getElementById('forgot-panel').classList.remove('hidden');
+        }
+
+        function hideForgotPanel() {
+            document.getElementById('forgot-panel').classList.add('hidden');
+        }
+
+        function showResetPanel() {
+            document.getElementById('reset-panel').classList.remove('hidden');
+        }
+
+        function hideResetPanel() {
+            document.getElementById('reset-panel').classList.add('hidden');
+        }
+
+        function moveToNext(input, index) {
+            if (input.value.length === 1) {
+                const next = document.querySelectorAll('.otp-input')[index + 1];
+                if (next) next.focus();
+            }
+            
+            // Auto submit if all filled
+            const allFilled = Array.from(document.querySelectorAll('.otp-input')).every(i => i.value.length === 1);
+            if (allFilled) {
+                verifyOTP();
+            }
+        }
+
+        function handleOTPKey(event, input, index) {
+            if (event.key === 'Backspace' && !input.value && index > 0) {
+                const prev = document.querySelectorAll('.otp-input')[index - 1];
+                prev.focus();
+            }
+        }
+
+        function startOTPTimer() {
+            otpTimeLeft = 120;
+            const timerElement = document.getElementById('otp-timer');
+            const resendBtn = document.getElementById('resend-otp');
+            
+            resendBtn.disabled = true;
+            
+            clearInterval(otpTimer);
+            otpTimer = setInterval(() => {
+                otpTimeLeft--;
+                const minutes = Math.floor(otpTimeLeft / 60);
+                const seconds = otpTimeLeft % 60;
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (otpTimeLeft <= 0) {
+                    clearInterval(otpTimer);
+                    resendBtn.disabled = false;
+                    timerElement.textContent = '00:00';
+                }
+            }, 1000);
+        }
+
+        async function sendOTP(phone, purpose) {
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            sessionStorage.setItem('current_otp', otp);
+            sessionStorage.setItem('otp_purpose', purpose);
+            sessionStorage.setItem('otp_phone', phone);
+
+            const message = `[NovaPay] Kode OTP ${purpose} Anda: ${otp}. Jangan bagikan kode ini kepada siapapun.`;
+
+            try {
+                if (FONNTE_API_KEY !== 'YOUR_FONNTE_API_KEY') {
+                    await fetch('https://api.fonnte.com/send', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': FONNTE_API_KEY,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            target: phone,
+                            message: message,
+                            countryCode: '62'
+                        })
+                    });
+                } else {
+                    console.log('OTP Demo:', otp);
+                    alert(`[Demo Mode] OTP: ${otp}`);
+                }
+            } catch (error) {
+                console.log('OTP Demo (fallback):', otp);
+                alert(`[Demo Mode] OTP: ${otp}`);
+            }
+        }
+
+        function verifyOTP() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const otp = Array.from(otpInputs).map(i => i.value).join('');
+            const storedOTP = sessionStorage.getItem('current_otp');
+
+            if (otp.length !== 6) {
+                alert('Masukkan 6 digit OTP!');
+                return;
+            }
+
+            if (otp === storedOTP) {
+                if (currentOTPAction === 'register') {
+                    // Complete registration
+                    const pendingUser = JSON.parse(sessionStorage.getItem('pending_user'));
+                    users.push(pendingUser);
+                    localStorage.setItem('nova_users', JSON.stringify(users));
+                    
+                    hideOTPPanel();
+                    showHome(pendingUser.username);
+                    
+                    // Clear forms
+                    document.getElementById('reg-username').value = '';
+                    document.getElementById('reg-phone').value = '';
+                    document.getElementById('reg-password').value = '';
+                    document.getElementById('reg-confirm').value = '';
+                    
+                    alert('Registrasi berhasil!');
+                } else if (currentOTPAction === 'forgot') {
+                    hideOTPPanel();
+                    showResetPanel();
+                }
+                
+                sessionStorage.removeItem('current_otp');
+            } else {
+                alert('Kode OTP salah!');
+            }
+        }
+
+        function resendOTP() {
+            const phone = sessionStorage.getItem('otp_phone');
+            const purpose = sessionStorage.getItem('otp_purpose');
+            sendOTP(phone, purpose);
+            startOTPTimer();
+        }
+
+        // ==================== FORGOT PASSWORD ====================
+        function requestForgotOTP() {
+            const phone = document.getElementById('forgot-phone').value;
+            
+            if (!phone) {
+                alert('Masukkan nomor HP!');
+                return;
+            }
+
+            const user = users.find(u => u.phone === phone);
+            if (!user) {
+                alert('Nomor HP tidak terdaftar!');
+                return;
+            }
+
+            sessionStorage.setItem('reset_phone', phone);
+            document.getElementById('otp-phone-display').textContent = phone;
+            showOTPPanel('forgot');
+            sendOTP(phone, 'reset password');
+        }
+
+        function resetPassword() {
+            const newPass = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+
+            if (!newPass || !confirmPass) {
+                alert('Password harus diisi!');
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                alert('Password tidak cocok!');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                alert('Password minimal 6 karakter!');
+                return;
+            }
+
+            const phone = sessionStorage.getItem('reset_phone');
+            const user = users.find(u => u.phone === phone);
+            
+            if (user) {
+                user.password = newPass;
+                localStorage.setItem('nova_users', JSON.stringify(users));
+                
+                hideResetPanel();
+                showLogin();
+                
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+                
+                alert('Password berhasil direset! Silakan login.');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Bottom Navigation Interactivity
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.dataset.page;
+                    showPage(page);
                 });
             });
-        })();
+            
+            // Initialize with login card
+            showLogin();
+            
+            // Demo user
+            if (users.length === 0) {
+                users.push({
+                    username: 'demo',
+                    phone: '08123456789',
+                    password: 'demo123'
+                });
+                localStorage.setItem('nova_users', JSON.stringify(users));
+            }
+        });
     </script>
 </body>
 </html>
